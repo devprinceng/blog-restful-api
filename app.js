@@ -1,8 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
-
 dotenv.config();
+
+const connectMongoDb = require('./init/MongoDB');
+
+//connect database
+connectMongoDb();
 
 //* initialize app
 const app = express()
