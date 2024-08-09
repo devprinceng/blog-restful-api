@@ -7,7 +7,7 @@ const register = async (req, res, next) => {
 
         await newUser.save();
         // send response
-        return res.status(201).json({message: "User Created Successul", data: newUser})
+        return res.status(201).json({code: 201, status: true, message: "User Created Successul", data: newUser})
     } catch (error) {
         next(error)
     }
