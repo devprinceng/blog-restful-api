@@ -16,9 +16,9 @@ const app = express()
 app.use(express.json({limit: '500mb'}));
 app.use(bodyParser.urlencoded({limit:'500mb',extended:true}));
 app.use(morgan('dev'))
-//error handling middlewares
-app.use(errorHandler);
 //routes
 app.use('/api/v1/auth/', authRouter)
+// use error handler middleware
+app.use(errorHandler);
 
 module.exports = app;
