@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 dotenv.config();
 const { authRouter } = require('./routes')
 const connectMongoDb = require('./init/MongoDB');
-
+const morgan = require('morgan')
 //connect database
 connectMongoDb();
 
@@ -14,7 +14,7 @@ const app = express()
 //use thirdparty middlewares
 app.use(express.json({limit: '500mb'}));
 app.use(bodyParser.urlencoded({limit:'500mb',extended:true}));
-
+app.use(morgan('dev'))
 //routes
 app.use('/api/v1/auth/', authRouter)
 
