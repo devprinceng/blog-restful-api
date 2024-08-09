@@ -6,6 +6,7 @@ const { authRouter } = require('./routes')
 const connectMongoDb = require('./init/MongoDB');
 const morgan = require('morgan')
 const {errorHandler} = require('./middlewares')
+const notFoundController = require('./controllers/notFoundController')
 //connect database
 connectMongoDb();
 
@@ -18,7 +19,10 @@ app.use(bodyParser.urlencoded({limit:'500mb',extended:true}));
 app.use(morgan('dev'))
 //routes
 app.use('/api/v1/auth/', authRouter)
+//api not found route
+app.use('*', notFoundController)
 // use error handler middleware
 app.use(errorHandler);
+
 
 module.exports = app;
