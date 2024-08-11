@@ -2,7 +2,7 @@ const { User } = require("../models");
 
 const register = async (req, res, next) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, password_confirm, role } = req.body;
         
         //validations
         if(!name){
@@ -20,6 +20,10 @@ const register = async (req, res, next) => {
         if(password.length < 6){
             res.code = 400;
             throw new Error('password must be greater than 6 characters');
+        }
+        if(password !== password_confirm){
+            res.code = 400;
+            throw new Error('password confirmation does not match');
         }
 
         const newUser = await User({name, email, password, role});
