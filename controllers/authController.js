@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const hashPassword = require('../utils/hashedPassword')
+const comparePassword = require('../utils/comparePassword')
 const register = async (req, res, next) => {
     try {
         const { name, email, password, password_confirm, role } = req.body;
@@ -48,4 +49,34 @@ const register = async (req, res, next) => {
     }
 }
 
-module.exports = { register }
+const login = async (req, res, next) => {
+    try {
+        const {email, password } = req.body;
+
+        //check if username exist
+        const user = await User.findOne({email});
+        if(!user){
+            res.status(401);
+            throw new Error('Invalidate email or password');
+        }
+
+        //check password match
+        const matched = await comparePassword(password, user.password)
+
+        //compare password
+        if(!matched){
+            res.status(401);
+            throw new Error('Invalidate email or password');
+        }
+
+        return res.status(200).json({code: 200, status: true, message: "Login Successful"})
+    } catch (error) {
+        next(error);
+    }
+    
+
+    //compare password
+
+}
+
+module.exports = { register, login }
