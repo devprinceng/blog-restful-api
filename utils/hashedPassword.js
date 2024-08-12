@@ -17,3 +17,5 @@ const hashPassword = (password) => {
         })
     })
 }
+
+module.exports = hashPassword

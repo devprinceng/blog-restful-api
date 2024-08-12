@@ -1,5 +1,5 @@
 const { User } = require("../models");
-
+const hashPassword = require('../utils/hashedPassword')
 const register = async (req, res, next) => {
     try {
         const { name, email, password, password_confirm, role } = req.body;
@@ -28,13 +28,17 @@ const register = async (req, res, next) => {
         //! since we're using express validator no need keeping the above validations
 
         //* lets check if email exist on DB
-        const isEmailExist = await User.findOne({email});
+        const isEmailExist = await User.findOne({ email });
         if(isEmailExist){
             res.status(400);
             throw new Error("Email already exist");
         }
-        
-        const newUser = await User({name, email, password, role});
+
+        //hash password
+        const password_hash = await hashPassword(password);
+        console.log(password_hash);
+        //create new user
+        const newUser = await User({name, email, password:password_hash, role});
 
         await newUser.save();
         // send response
