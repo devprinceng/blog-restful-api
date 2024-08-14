@@ -1,6 +1,7 @@
 const { User } = require("../models");
 const hashPassword = require('../utils/hashedPassword')
-const comparePassword = require('../utils/comparePassword')
+const comparePassword = require('../utils/comparePassword');
+const generateToken = require("../utils/generateToken");
 const register = async (req, res, next) => {
     try {
         const { name, email, password, password_confirm, role } = req.body;
@@ -68,15 +69,22 @@ const login = async (req, res, next) => {
             res.status(401);
             throw new Error('Invalidate email or password');
         }
+        //token
+        const token = generateToken(user);
 
-        return res.status(200).json({code: 200, status: true, message: "Login Successful"})
+        return res
+                .status(200)
+                .json(
+                    {
+                        code: 200,
+                        status: true,
+                        message: "Login Successful",
+                        data: {token}
+                    })
     } catch (error) {
         next(error);
     }
     
-
-    //compare password
-
 }
 
 module.exports = { register, login }
