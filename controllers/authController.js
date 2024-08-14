@@ -2,6 +2,7 @@ const { User } = require("../models");
 const hashPassword = require('../utils/hashedPassword')
 const comparePassword = require('../utils/comparePassword');
 const generateToken = require("../utils/generateToken");
+const generateCode = require('../utils/generateCode');
 const register = async (req, res, next) => {
     try {
         const { name, email, password, password_confirm, role } = req.body;
@@ -87,4 +88,41 @@ const login = async (req, res, next) => {
     
 }
 
-module.exports = { register, login }
+//verifyemail controller
+const verifyCode = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+
+        //find user
+        const user = await User.findOne({email});
+        if(!user){
+            res.status(404);
+            throw new Error('User not Found');
+        }
+
+        //check if user is verified
+        if(user.isVerified){
+            res.status(400);
+            throw new Error('User already verified');
+        }
+
+        const code = generateCode(6);
+
+        user.verificationCode = code;
+        await user.save();
+
+        // send email to user
+
+        res
+            .status(200)
+            .json({
+                code: 200,
+                status: true,
+                message: "User successfully verified"
+            });
+    } catch (error) {
+        next(error)
+    }
+}
+
+module.exports = { register, login, verifyCode }

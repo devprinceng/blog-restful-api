@@ -27,5 +27,13 @@ const loginValidator = [
         .notEmpty()
         .withMessage('Password is required')
 ]
+//email validator for verification
+const emailValidator = [
+    check('email')
+        .isEmail()
+        .withMessage('Invalid Email')
+        .notEmpty()
+        .withMessage('Email is required')
+]
 
-module.exports = { registerValidator, loginValidator }
+module.exports = { registerValidator, loginValidator, emailValidator }

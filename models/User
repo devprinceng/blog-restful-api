@@ -7,8 +7,9 @@ const userSchema = mongoose.Schema({
     email: {type: String, required: true, unique: true, trim: true},
     password: {type: String, required: true,minlength: 6},
     //! role: 1 for super admin, 2 for normal admin,3 for normal user
-    role: {type: Number, required: true, default: 3}
-    
+    role: {type: Number, required: true, default: 3},
+    verificationCode: String,
+    verifiedToken: {type: Boolean, default: false},
 },{timestamps: true})
 
 const User = mongoose.model('user', userSchema);
