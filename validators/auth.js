@@ -43,4 +43,20 @@ const verifyUserValidator = [
   check("code").notEmpty().withMessage("Code is required"),
 ];
 
-module.exports = { registerValidator, loginValidator, emailValidator };
+//recoverPasswordValidator
+const recoverPasswordValidator = [
+  check("email")
+    .isEmail()
+    .withMessage("Invalid Email")
+    .notEmpty()
+    .withMessage("Email is required"),
+  check("code").notEmpty().withMessage("Code is required"),
+  check("password").notEmpty().withMessage("Password is required"),
+];
+
+module.exports = {
+  registerValidator,
+  loginValidator,
+  emailValidator,
+  recoverPasswordValidator,
+};
