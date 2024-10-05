@@ -134,4 +134,34 @@ const verifyCode = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login, verifyCode };
+//*verify user controller method
+const verifyUser = async (req, res, next) => {
+  try {
+    const { email, code } = req.body;
+    //find user
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not Found");
+    }
+
+    if (user.verificationCode !== code) {
+      res.code = 400;
+      throw new Error("Code is Invalid");
+    }
+
+    //! verify user
+    user.isVerified = true;
+    user.verificationCode = null;
+    await user.save();
+
+    res
+      .status(200)
+      .json({ code: 200, status: true, message: "User verified Successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { register, login, verifyCode, verifyUser };
