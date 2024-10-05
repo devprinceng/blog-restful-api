@@ -58,5 +58,6 @@ module.exports = {
   registerValidator,
   loginValidator,
   emailValidator,
+  verifyUserValidator,
   recoverPasswordValidator,
 };
