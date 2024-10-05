@@ -10,6 +10,7 @@ const userSchema = mongoose.Schema({
     role: {type: Number, required: true, default: 3},
     verificationCode: String,
     verifiedToken: {type: Boolean, default: false},
+    forgotPasswordCode: String
 },{timestamps: true})
 
 const User = mongoose.model('user', userSchema);
