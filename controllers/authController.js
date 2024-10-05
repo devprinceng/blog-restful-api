@@ -10,29 +10,6 @@ const register = async (req, res, next) => {
   try {
     const { name, email, password, password_confirm, role } = req.body;
 
-    //validations
-    // if(!name){
-    //     res.code = 400;
-    //     throw new Error('name is required');
-    // }
-    // if(!email){
-    //     res.code = 400;
-    //     throw new Error('email is required');
-    // }
-    // if(!password){
-    //     res.code = 400;
-    //     throw new Error('password is required');
-    // }
-    // if(password.length < 6){
-    //     res.code = 400;
-    //     throw new Error('password must be greater than 6 characters');
-    // }
-    // if(password !== password_confirm){
-    //     res.code = 400;
-    //     throw new Error('password confirmation does not match');
-    // }
-    //! since we're using express validator no need keeping the above validations
-
     //* lets check if email exist on DB
     const isEmailExist = await User.findOne({ email });
     if (isEmailExist) {
@@ -42,7 +19,7 @@ const register = async (req, res, next) => {
 
     //hash password
     const password_hash = await hashPassword(password);
-    // console.log(password_hash);
+
     //create new user
     const newUser = await User({ name, email, password: password_hash, role });
 
@@ -163,5 +140,44 @@ const verifyUser = async (req, res, next) => {
     next(error);
   }
 };
+//* send forgot password controller
+const forgotPasswordCode = async (req, res, next) => {
+  try {
+    const { email } = req.body;
 
-module.exports = { register, login, verifyCode, verifyUser };
+    //find user
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not Found");
+    }
+    //* generate password code
+    const code = generateCode(6);
+    //* set the code in db
+    user.forgotPasswordCode = code;
+    await user.save();
+
+    // send email to user
+    await sendEMailVerification({
+      emailTo: user.email,
+      subject: "Forgot Password code",
+      code,
+      content: "Use this Code to confirm password change",
+    });
+
+    res.status(200).json({
+      code: 200,
+      status: true,
+      message: "Forgot password code sent successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = {
+  register,
+  login,
+  verifyCode,
+  verifyUser,
+  forgotPasswordCode,
+};
