@@ -20,4 +20,10 @@ router.post(
   validate,
   authController.verifyUser
 );
+router.post(
+  "/send-forgot-password-code",
+  emailValidator,
+  validate,
+  authController.forgotPasswordCode
+);
 module.exports = router;
