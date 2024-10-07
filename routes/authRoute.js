@@ -3,15 +3,16 @@ const router = express.Router();
 const { authController } = require("../controllers/");
 const {
   registerValidator,
+  loginValidator,
+  emailValidator,
+  verifyUserValidator,
   recoverPasswordValidator,
+  changePasswordValidator,
 } = require("../validators/auth");
-const { loginValidator } = require("../validators/auth");
-const { emailValidator } = require("../validators/auth");
-const { verifyUserValidator } = require("../validators/auth");
-const { recoverPasswordValidator } = require("../validators/auth");
 
 const validate = require("../validators/validate");
 const { recoverPassword } = require("../controllers/authController");
+const isAuth = require("../middlewares/isAuth");
 
 router.post("/register", registerValidator, validate, authController.register);
 router.post("/login", loginValidator, validate, authController.login);
@@ -40,5 +41,13 @@ router.post(
   recoverPasswordValidator,
   validate,
   authController.recoverPassword
+);
+//* recover password route
+router.put(
+  "/change-password",
+  changePasswordValidator,
+  validate,
+  isAuth,
+  authController.changePassword
 );
 module.exports = router;
