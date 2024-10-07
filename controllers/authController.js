@@ -209,6 +209,44 @@ const recoverPassword = async (req, res, next) => {
     next(error);
   }
 };
+
+//change password route
+const changePassword = async (req, res, next) => {
+  try {
+    //get old and new password
+    const { oldPassword, newPassword } = req.body;
+    //confirm the user
+    const { _id } = req.user;
+    const user = await User.findById(_id);
+
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not found");
+    }
+
+    const match = await comparePassword(oldPassword, user.password);
+    if (!match) {
+      res.code = 400;
+      throw new Error("Old password incorrect");
+    }
+    if (oldPassword === newPassword) {
+      res.code = 400;
+      throw new Error("Provide a new password");
+    }
+
+    // hash the password
+    const hashed = await hashPassword(newPassword);
+    user.password = hashed;
+    await user.save();
+
+    res
+      .status(200)
+      .json({ code: 200, status: true, message: "Password change successful" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -216,4 +254,5 @@ module.exports = {
   verifyUser,
   forgotPasswordCode,
   recoverPassword,
+  changePassword,
 };
