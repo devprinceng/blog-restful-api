@@ -1,10 +1,10 @@
 const express = require("express");
-const addCategoryValidator = require("../validators/category.js");
-const { categoryController } = require("../controllers/index.js");
-const validate = require("../validators/validate.js");
-const isAuth = require("../middlewares/isAuth.js");
-const isAdmin = require("../middlewares/isAdmin.js");
 const router = express.Router();
+const { categoryController } = require("../controllers/");
+const { addCategoryValidator, idValidator } = require("../validators/category");
+const validate = require("../validators/validate");
+const isAuth = require("../middlewares/isAuth");
+const isAdmin = require("../middlewares/isAdmin");
 
 //add category route
 router.post(
@@ -16,4 +16,12 @@ router.post(
   categoryController.addCategory
 );
 
+router.delete(
+  "/:id",
+  isAuth,
+  isAdmin,
+  idValidator,
+  validate,
+  categoryController.deleteCategory
+);
 module.exports = router;

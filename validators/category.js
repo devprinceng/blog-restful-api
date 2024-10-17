@@ -5,4 +5,9 @@ const addCategoryValidator = [
   check("title").notEmpty().withMessage("title is required"),
 ];
 
-module.exports = addCategoryValidator;
+//id validator
+const idValidator = [
+  check("id").notEmpty().withMessage("category id is required"),
+];
+
+module.exports = { addCategoryValidator, idValidator };
