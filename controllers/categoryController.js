@@ -103,4 +103,29 @@ const deleteCategory = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { addCategory, updateCategory, deleteCategory };
+//search category
+const searchCategory = async (req, res, next) => {
+  //get title
+  const { q } = req.query;
+  let query = {}; //for all
+  if (q) {
+    const search = RegExp(q, "i"); //i for case insensitivity
+    query = { $or: [{ title: search }, { description: search }] }; //use regex
+  }
+
+  const categories = await Category.find(query);
+
+  res.status(200).json({
+    code: 200,
+    status: true,
+    message: "Get Categories sucessfully",
+    data: { categories },
+  });
+};
+
+module.exports = {
+  addCategory,
+  searchCategory,
+  updateCategory,
+  deleteCategory,
+};

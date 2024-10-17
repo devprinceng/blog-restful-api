@@ -5,6 +5,7 @@ const { addCategoryValidator, idValidator } = require("../validators/category");
 const validate = require("../validators/validate");
 const isAuth = require("../middlewares/isAuth");
 const isAdmin = require("../middlewares/isAdmin");
+const { searchCategory } = require("../controllers/categoryController");
 
 //add category route
 router.post(
@@ -33,4 +34,6 @@ router.delete(
   validate,
   categoryController.deleteCategory
 );
+//serach category route
+router.get("/", isAuth, searchCategory);
 module.exports = router;
