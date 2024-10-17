@@ -52,7 +52,7 @@ const updateCategory = async (req, res, next) => {
     }
 
     //* check if category exist
-    const isCategoryExist = await Category.findOne({ title: category.title });
+    const isCategoryExist = await Category.findOne({ title });
     if (
       isCategoryExist &&
       isCategoryExist.title === title &&
