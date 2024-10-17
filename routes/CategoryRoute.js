@@ -16,7 +16,14 @@ router.post(
   categoryController.addCategory
 );
 //update category route
-router.put("/:id", isAuth, isAdmin, categoryController.updateCategory);
+router.put(
+  "/:id",
+  isAuth,
+  isAdmin,
+  idValidator,
+  validate,
+  categoryController.updateCategory
+);
 //delete category route
 router.delete(
   "/:id",
