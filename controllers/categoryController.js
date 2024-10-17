@@ -37,6 +37,49 @@ const addCategory = async (req, res, next) => {
   }
 };
 
+//* update category
+const updateCategory = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { title, description } = req.body;
+    const { _id } = req.user;
+
+    //* get category
+    const category = await Category.findById(id);
+    if (!category) {
+      res.code = 404;
+      throw new Error("Category does not exist");
+    }
+
+    //* check if category exist
+    const isCategoryExist = await Category.findOne({ title: category.title });
+    if (
+      isCategoryExist &&
+      isCategoryExist.title === title &&
+      String(isCategoryExist._id) !== String(category._id)
+    ) {
+      res.code = 404;
+      throw new Error("Title already exist");
+    }
+
+    //* save category details
+    category.title = title ? title : category.title;
+    category.description = description;
+    category.updatedBy = _id;
+    //* save
+    await category.save();
+
+    res.status(200).json({
+      code: 200,
+      status: true,
+      message: "Category updated successfully",
+      data: { category },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 //delete category controller
 const deleteCategory = async (req, res, next) => {
   try {
@@ -60,4 +103,4 @@ const deleteCategory = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { addCategory, deleteCategory };
+module.exports = { addCategory, updateCategory, deleteCategory };
