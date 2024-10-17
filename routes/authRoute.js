@@ -11,7 +11,7 @@ const {
 } = require("../validators/auth");
 
 const validate = require("../validators/validate");
-const { recoverPassword } = require("../controllers/authController");
+// const { recoverPassword } = require("../controllers/authController");
 const isAuth = require("../middlewares/isAuth");
 
 router.post("/register", registerValidator, validate, authController.register);
@@ -50,4 +50,5 @@ router.put(
   isAuth,
   authController.changePassword
 );
+
 module.exports = router;
